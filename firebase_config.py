@@ -10,8 +10,11 @@ load_dotenv()
 
 # Inicializando o Firebase Admin SDK com as credenciais do arquivo JSON
 if not firebase_admin._apps:
-    private_key = os.getenv("FIREBASE_PRIVATE_KEY").replace("\\n", "\n")  # Substitui o \n da chave privada
-    cred = credentials.Certificate({
+    # Obtenha a chave privada e converta os caracteres escapados para linhas reais
+    private_key = os.getenv("FIREBASE_PRIVATE_KEY").replace("\\n", "\n")
+
+    # Construa o dicionário de credenciais
+    firebase_credentials = {
         "type": "service_account",
         "project_id": os.getenv("FIREBASE_PROJECT_ID"),
         "private_key_id": os.getenv("FIREBASE_PRIVATE_KEY_ID"),
@@ -21,9 +24,11 @@ if not firebase_admin._apps:
         "auth_uri": "https://accounts.google.com/o/oauth2/auth",
         "token_uri": "https://oauth2.googleapis.com/token",
         "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-        "client_x509_cert_url": os.getenv("FIREBASE_CLIENT_X509_CERT_URL"),
-    })
-    firebase_admin.initialize_app(cred)
+        "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-a7xzn%40leitura-catecismo-biblia.iam.gserviceaccount.com",
+        "universe_domain": "googleapis.com"
+    }
+cred = credentials.Certificate(firebase_credentials)
+firebase_admin.initialize_app(cred)
 
 # Inicializando o Firestore para manipular o banco de dados
 db = firestore.client()
