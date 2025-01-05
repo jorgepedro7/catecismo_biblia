@@ -11,7 +11,7 @@ load_dotenv()
 # Inicializando o Firebase Admin SDK com as credenciais do arquivo JSON
 if not firebase_admin._apps:
     # Obtenha a chave privada e converta os caracteres escapados para linhas reais
-    private_key = st.secrets["FIREBASE_PRIVATE_KEY"]
+    private_key = os.getenv("FIREBASE_PRIVATE_KEY")
 
     # Construa o dicionário de credenciais
     firebase_credentials = {
