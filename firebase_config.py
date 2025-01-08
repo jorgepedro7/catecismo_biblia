@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 # Verifica o ambiente: local ou Streamlit Cloud
 if os.getenv("STREAMLIT_CLOUD") is None:
     # Ambiente local: carrega variáveis do .env
-    load_dotenv()
+    load_dotenv(override=True)
     get_env = os.getenv
 else:
     # Ambiente no Streamlit Cloud: usa st.secrets

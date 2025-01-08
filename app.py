@@ -19,7 +19,7 @@ def mostrar_progresso():
     """
     Exibe o progresso do usuário com base nos dias lidos.
     """
-    progresso = carregar_progresso(st.session_state.usuario_token)
+    progresso = carregar_progresso(st.session_state.usuario_uid)  # Usando o UID
     dias_lidos = len(progresso["dias_lidos"])
     dias_totais = 365
     progresso_percentual = (dias_lidos / dias_totais) * 100
@@ -42,7 +42,7 @@ def interface_usuario():
     mostrar_leitura(dia_selecionado)
 
     if st.button(f"Marcar o dia {dia_selecionado} como lido"):
-        marcar_dia_lido(st.session_state.usuario_token, dia_selecionado)
+        marcar_dia_lido(st.session_state.usuario_uid, dia_selecionado)  # Usando o UID
         st.success(f"Dia {dia_selecionado} marcado como lido!")
 
     if st.button("Próximo Dia"):
@@ -53,7 +53,7 @@ def interface_usuario():
             st.warning("Você já alcançou o último dia de leitura.")
 
     if st.button("Resetar Progresso"):
-        if resetar_progresso(st.session_state.usuario_token):
+        if resetar_progresso(st.session_state.usuario_uid):  # Usando o UID
             st.success("Progresso resetado com sucesso.")
         else:
             st.error("Erro ao resetar progresso.")
@@ -68,10 +68,10 @@ def interface_login():
         email = st.text_input("Email")
         senha = st.text_input("Senha", type="password")
         if st.button("Entrar"):
-            user = autenticar_usuario(email, senha)
-            if user:
+            user_uid = autenticar_usuario(email, senha)  # Agora retorna o UID
+            if user_uid:
                 st.session_state.usuario_email = email
-                st.session_state.usuario_token = user["idToken"]
+                st.session_state.usuario_uid = user_uid  # Armazenando o UID
                 st.success(f"Bem-vindo, {email}!")
             else:
                 st.error("Email ou senha incorretos.")
@@ -84,8 +84,8 @@ def interface_login():
             if nova_senha != confirmacao_senha:
                 st.error("As senhas não coincidem.")
             else:
-                user = criar_usuario(novo_email, nova_senha)
-                if user:
+                user_uid = criar_usuario(novo_email, nova_senha)  # Agora retorna o UID
+                if user_uid:
                     st.success(f"Conta criada com sucesso para {novo_email}! Faça login para continuar.")
                 else:
                     st.error("Erro ao criar conta.")
@@ -96,7 +96,7 @@ def main():
     """
     st.title("Acompanhamento de Leitura - Bíblia e Catecismo")
 
-    if "usuario_email" in st.session_state and "usuario_token" in st.session_state:
+    if "usuario_email" in st.session_state and "usuario_uid" in st.session_state:  # Verifica se o UID está na sessão
         st.sidebar.title(f"Bem-vindo, {st.session_state.usuario_email}!")
         interface_usuario()
     else:

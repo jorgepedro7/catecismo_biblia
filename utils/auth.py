@@ -11,7 +11,8 @@ def autenticar_usuario(email, senha):
     """
     try:
         user = auth.sign_in_with_email_and_password(email, senha)
-        return user
+        uid_usuario = user['localId']
+        return uid_usuario
     except Exception as e:
         print(f"Erro ao autenticar: {e}")
         return None
@@ -22,7 +23,8 @@ def criar_usuario(email, senha):
     """
     try:
         user = auth.create_user_with_email_and_password(email, senha)
-        return user
+        uid_usuario = user['localId']
+        return uid_usuario
     except Exception as e:
         print(f"Erro ao criar usuário: {e}")
         return None
